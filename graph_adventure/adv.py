@@ -22,9 +22,54 @@ player = Player("Name", world.startingRoom)
 
 # FILL THIS IN
 
+class Queue():
+    def __init__(self):
+        self.queue = []
+    def enqueue(self, value):
+        self.queue.append(value)
+    def dequeue(self):
+        if self.size() > 0:
+            return self.queue.pop(0)
+        else:
+            return None
+    def size(self):
+        return len(self.queue)
+
+class Stack():
+    def __init__(self):
+        self.stack = []
+    def push(self, value):
+        self.stack.append(value)
+    def pop(self):
+        if self.size() > 0:
+            return self.stack.pop()
+        else:
+            return None
+    def size(self):
+        return len(self.stack)
+
+
+
+def dft(starting_vertex, matrix):
+    visited_rooms = {}
+    qq = Queue()
+    qq.enqueue([starting_vertex])
+    while qq.size() > 0:
+        path = qq.dequeue()
+        vertex = path[-1]
+        if vertex not in visited_rooms:
+            visited_rooms[vertex] = path
+            for next_vert in matrix:
+                new_path = path.copy()
+                new_path.append(next_vert)
+                qq.enqueue(new_path)
+            
+
+
 traversalPath = ['n', 's']
-print(f'x: {player.currentRoom.x}')
-print(f'y: {player.currentRoom.y}')
+print(player.currentRoom.getExits())
+# print(f'x: {player.currentRoom.x}')
+# print(f'y: {player.currentRoom.y}')
 # print(roomGraph[0][0][0])
 
 
