@@ -21,8 +21,74 @@ player = Player("Name", world.startingRoom)
 
 
 # FILL THIS IN
-traversalPath = ['n', 's']
 
+class Queue():
+    def __init__(self):
+        self.queue = []
+    def enqueue(self, value):
+        self.queue.append(value)
+    def dequeue(self):
+        if self.size() > 0:
+            return self.queue.pop(0)
+        else:
+            return None
+    def size(self):
+        return len(self.queue)
+
+class Stack():
+    def __init__(self):
+        self.stack = []
+    def push(self, value):
+        self.stack.append(value)
+    def pop(self):
+        if self.size() > 0:
+            return self.stack.pop()
+        else:
+            return None
+    def size(self):
+        return len(self.stack)
+
+
+# get opposite direction
+
+def getOpposite(direction):
+    if direction is 'n':
+        return 's' 
+    elif direction is 's':
+        return 'n'
+    elif direction is 'e':
+        return 'w'
+    elif direction is 'w':
+        return 'e'
+
+# visited rooms dict
+visited = {}
+# initilize rooms dict with current room exits
+visited[player.currentRoom.id] = player.currentRoom.getExits()
+# checked rooms list
+checked_rooms = []
+# moves count
+moves_count = []
+
+while len(list(visited)) < 499:
+    # if current room is not in visited...
+    if player.currentRoom.id not in visited:
+        # add room to visited
+        visited[player.currentRoom.id] = player.currentRoom.getExits()
+        visited[player.currentRoom.id].remove(checked_rooms[-1])
+    # If there aren't any rooms to travel, back track until there is
+    while len(visited[player.currentRoom.id]) is 0 and len(checked_rooms) > 0:
+        path = checked_rooms.pop()
+        moves_count.append(path)
+        player.travel(path)
+    # move player
+    move = visited[player.currentRoom.id].pop(0)
+    # add move to count and reverse path
+    checked_rooms.append(getOpposite(move))
+    moves_count.append(move)
+    player.travel(move)
+
+traversalPath = moves_count
 
 # TRAVERSAL TEST
 visited_rooms = set()
@@ -40,10 +106,10 @@ else:
 
 
 
-#######
+######
 # UNCOMMENT TO WALK AROUND
-#######
-# player.currentRoom.printRoomDescription(player)
+######
+player.currentRoom.printRoomDescription(player)
 # while True:
 #     cmds = input("-> ").lower().split(" ")
 #     if cmds[0] in ["n", "s", "e", "w"]:
